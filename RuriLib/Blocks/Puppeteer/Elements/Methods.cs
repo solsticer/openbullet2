@@ -334,7 +334,9 @@ public static class Methods
 
     private static async Task<IElementHandle> GetElement(IFrame frame, FindElementBy findBy, string identifier, int index)
     {
-        var elements = await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier));
+        var elements = findBy is FindElementBy.XPath ?
+            await frame.XPathAsync(identifier) :
+            await frame.QuerySelectorAllAsync(BuildSelector(findBy, identifier));
 
         if (elements.Length < index + 1)
         {
@@ -351,10 +353,8 @@ public static class Methods
             var script = $"document.evaluate(\"{identifier.Replace("\"", "\\\"")}\", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)";
             return $"Array.from({{ length: {script}.snapshotLength }}, (_, index) => {script}.snapshotItem(index))";
         }
-        else
-        {
-            return $"document.querySelectorAll('{BuildSelector(findBy, identifier)}')";
-        }
+
+        return $"document.querySelectorAll('{BuildSelector(findBy, identifier)}')";
     }
 
     private static string GetElementScript(FindElementBy findBy, string identifier, int index)
