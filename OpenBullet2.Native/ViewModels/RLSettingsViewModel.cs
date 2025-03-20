@@ -597,6 +597,16 @@ public class RLSettingsViewModel : ViewModelBase
         }
     }
 
+     public string SeleniumEdgeBinaryLocation
+    {
+        get => Selenium.EdgeBinaryLocation;
+        set
+        {
+            Selenium.EdgeBinaryLocation = value;
+            OnPropertyChanged();
+        }
+    }
+
     public string SeleniumFirefoxBinaryLocation
     {
         get => Selenium.FirefoxBinaryLocation;

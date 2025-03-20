@@ -7,6 +7,7 @@ using OpenQA.Selenium.Remote;
 using RuriLib.Models.Settings;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Edge;
 using System;
 using OpenQA.Selenium;
 using System.Linq;
@@ -86,6 +87,58 @@ namespace RuriLib.Blocks.Selenium.Browser
                     }
 
                     data.SetObject("selenium", new ChromeDriver(chromeservice, chromeop));
+                    break;
+
+                case SeleniumBrowserType.Edge:
+                    var edgeop = new EdgeOptions();
+                    var edgeservice = EdgeDriverService.CreateDefaultService();
+                    edgeservice.SuppressInitialDiagnosticInformation = true;
+                    edgeservice.HideCommandPromptWindow = true;
+                    edgeservice.EnableVerboseLogging = false;
+                    edgeop.AddArgument("--log-level=3");
+                    edgeop.BinaryLocation = provider.ChromeBinaryLocation;
+
+                    if (Utils.IsDocker())
+                    {
+                        if (RootChecker.IsRoot())
+                        {
+                            edgeop.AddArgument("--no-sandbox");
+                        }
+                        
+                        edgeop.AddArgument("--whitelisted-ips=''");
+                        edgeop.AddArgument("--disable-dev-shm-usage");
+                    }
+
+                    if (data.ConfigSettings.BrowserSettings.Headless)
+                    {
+                        edgeop.AddArgument("--headless");
+                    }
+
+                    if (data.ConfigSettings.BrowserSettings.DismissDialogs)
+                    {
+                        edgeop.AddArgument("--disable-notifications");
+                    }
+
+                    args = data.ConfigSettings.BrowserSettings.CommandLineArgs;
+
+                    if (!string.IsNullOrWhiteSpace(args))
+                    {
+                        // Extra command line args (to have dynamic args via variables)
+                        if (!string.IsNullOrWhiteSpace(extraCmdLineArgs))
+                        {
+                            args += ' ' + extraCmdLineArgs;
+                        }
+
+                        edgeop.AddArgument(args);
+                    }
+
+                    if (data.UseProxy)
+                    {
+                        // TODO: Add support for auth proxies using yove
+                        edgeop.AddArgument($"--proxy-server={data.Proxy.Type.ToString().ToLower()}://{data.Proxy.Host}:{data.Proxy.Port}");
+                    }
+
+                    data.SetObject("selenium", new EdgeDriver(edgeservice, edgeop));
                     break;
 
                 case SeleniumBrowserType.Firefox:

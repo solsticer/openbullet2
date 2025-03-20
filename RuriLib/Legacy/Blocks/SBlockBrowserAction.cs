@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Interactions;
 using RuriLib.Legacy.LS;
 using RuriLib.Legacy.Models;
@@ -394,6 +395,48 @@ namespace RuriLib.Legacy.Blocks
                     }
 
                     data.SetObject("selenium", new ChromeDriver(chromeservice, chromeop));
+                    break;
+
+                case SeleniumBrowserType.Edge:
+                    var edgeop = new EdgeOptions();
+                    var edgeservice = EdgeDriverService.CreateDefaultService();
+                    edgeservice.SuppressInitialDiagnosticInformation = true;
+                    edgeservice.HideCommandPromptWindow = true;
+                    edgeservice.EnableVerboseLogging = false;
+                    edgeop.AddArgument("--log-level=3");
+                    edgeop.BinaryLocation = provider.EdgeBinaryLocation;
+
+                    if (Helpers.Utils.IsDocker())
+                    {
+                        edgeop.AddArgument("--no-sandbox");
+                        edgeop.AddArgument("--whitelisted-ips=''");
+                        edgeop.AddArgument("--disable-dev-shm-usage");
+                    }
+
+                    if (data.ConfigSettings.BrowserSettings.Headless)
+                    {
+                        edgeop.AddArgument("--headless");
+                    }
+
+                    // TODO: Readd support for chrome extensions
+
+                    if (data.ConfigSettings.BrowserSettings.DismissDialogs)
+                    {
+                        edgeop.AddArgument("--disable-notifications");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(data.ConfigSettings.BrowserSettings.CommandLineArgs))
+                    {
+                        edgeop.AddArgument(data.ConfigSettings.BrowserSettings.CommandLineArgs);
+                    }
+
+                    if (data.UseProxy)
+                    {
+                        // TODO: Add support for auth proxies using yove
+                        edgeop.AddArgument($"--proxy-server={data.Proxy.Type.ToString().ToLower()}://{data.Proxy.Host}:{data.Proxy.Port}");
+                    }
+
+                    data.SetObject("selenium", new EdgeDriver(edgeservice, edgeop));
                     break;
 
                 case SeleniumBrowserType.Firefox:
