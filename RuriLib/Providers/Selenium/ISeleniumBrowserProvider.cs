@@ -5,6 +5,7 @@ namespace RuriLib.Providers.Selenium
     public interface ISeleniumBrowserProvider
     {
         string ChromeBinaryLocation { get; }
+        string EdgeBinaryLocation { get; }
         string FirefoxBinaryLocation { get; }
         SeleniumBrowserType BrowserType { get; }
     }
