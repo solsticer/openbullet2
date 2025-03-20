@@ -96,7 +96,7 @@ namespace RuriLib.Blocks.Selenium.Browser
                     edgeservice.HideCommandPromptWindow = true;
                     edgeservice.EnableVerboseLogging = false;
                     edgeop.AddArgument("--log-level=3");
-                    edgeop.BinaryLocation = provider.ChromeBinaryLocation;
+                    edgeop.BinaryLocation = provider.EdgeBinaryLocation;
 
                     if (Utils.IsDocker())
                     {
