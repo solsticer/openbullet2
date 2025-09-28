@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { faExclamationTriangle, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { UpdateInfoDto, VersionType } from './dtos/info/update-info.dto';
@@ -11,10 +11,13 @@ import { UserService } from './services/user.service';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
+  @ViewChild('sidebar') sidebar!: ElementRef;
+
   updateInfo: UpdateInfoDto | null = null;
   faExclamationTriangle = faExclamationTriangle;
   faRightFromBracket = faRightFromBracket;
   changelogModalVisible = false;
+
 
   constructor(
     private router: Router,
@@ -63,5 +66,11 @@ export class MainComponent implements OnInit {
   logout() {
     this.userService.resetJwt();
     window.location.reload();
+  }
+
+  toggleSidebar() {
+    if (this.sidebar) {
+      this.sidebar.nativeElement.classList.toggle('show');
+    }
   }
 }
