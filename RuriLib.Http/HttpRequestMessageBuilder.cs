@@ -11,7 +11,7 @@ namespace RuriLib.Http
     static internal class HttpRequestMessageBuilder
     {
         private static readonly string newLine = "\r\n";
-        private static readonly string[] commaHeaders = new[] { "Accept", "Accept-Encoding" };
+        private static readonly string[] commaHeaders = new[] { "Accept", "Accept-Encoding", "Accept-Language" };
 
         // Builds the first line, for example
         // GET /resource HTTP/1.1
