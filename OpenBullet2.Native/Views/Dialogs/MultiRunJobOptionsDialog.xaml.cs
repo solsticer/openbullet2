@@ -94,7 +94,7 @@ namespace OpenBullet2.Native.Views.Dialogs
                 return;
             }
 
-            if (vm.SelectedConfig.HasCSharpCode())
+            if (vm.WarnCSharpCodeInConfig && vm.SelectedConfig.HasCSharpCode())
             {
                 Alert.Warning("Potentially dangerous config", "The Config you selected might have some C# code in it" +
                     " (or blocks that call external programs). Although C# can be helpful for config makers who want to" +
@@ -137,6 +137,7 @@ namespace OpenBullet2.Native.Views.Dialogs
         private readonly IRecordRepository recordRepo;
         private readonly IWordlistRepository wordlistRepo;
         private readonly RuriLibSettingsService rlSettingsService;
+        private readonly OpenBulletSettingsService obSettingsService;
         private readonly ConfigService configService;
         private readonly JobFactoryService jobFactory;
         private readonly IProxyGroupRepository proxyGroupRepo;
@@ -251,6 +252,7 @@ namespace OpenBullet2.Native.Views.Dialogs
 
         public bool IsConfigSelected => SelectedConfig is not null;
         public Config SelectedConfig { get; private set; }
+        public bool WarnCSharpCodeInConfig => obSettingsService.Settings.GeneralSettings.WarnCSharpCodeInConfig;
 
         public void SelectConfig(ConfigViewModel vm)
         {
@@ -395,6 +397,7 @@ namespace OpenBullet2.Native.Views.Dialogs
             recordRepo = SP.GetService<IRecordRepository>();
             wordlistRepo = SP.GetService<IWordlistRepository>();
             rlSettingsService = SP.GetService<RuriLibSettingsService>();
+            obSettingsService = SP.GetService<OpenBulletSettingsService>();
             configService = SP.GetService<ConfigService>();
             jobFactory = SP.GetService<JobFactoryService>();
             proxyGroupRepo = SP.GetService<IProxyGroupRepository>();

@@ -94,6 +94,12 @@ public class GeneralSettings
     public bool WarnConfigNotSaved { get; set; } = true;
 
     /// <summary>
+    /// Whether to display a warning when starting a job with a config that
+    /// contains C# code or blocks that call external programs.
+    /// </summary>
+    public bool WarnCSharpCodeInConfig { get; set; } = true;
+
+    /// <summary>
     /// The default author to use when creating new configs.
     /// </summary>
     public string DefaultAuthor { get; set; } = "Anonymous";

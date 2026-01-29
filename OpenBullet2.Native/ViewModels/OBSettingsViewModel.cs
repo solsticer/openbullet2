@@ -52,6 +52,16 @@ namespace OpenBullet2.Native.ViewModels
             }
         }
 
+        public bool WarnCSharpCodeInConfig
+        {
+            get => General.WarnCSharpCodeInConfig;
+            set
+            {
+                General.WarnCSharpCodeInConfig = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string DefaultAuthor
         {
             get => General.DefaultAuthor;
